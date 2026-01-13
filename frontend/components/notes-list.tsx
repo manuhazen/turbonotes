@@ -35,7 +35,7 @@ export function NotesList() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {notes.map((note) => (
-                <Link key={note.id} href={`/note/${note.id}`}>
+                <Link key={note.id} href={`/note/${note.id}`} className="h-full block">
                     <NoteCard
                         title={note.title}
                         date={new Date(note.updated_at).toLocaleDateString()}
@@ -44,6 +44,7 @@ export function NotesList() {
                             color: note.category_color || "#F9F4E8"
                         }}
                         content={note.description}
+                        className="h-full"
                     />
                 </Link>
             ))}

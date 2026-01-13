@@ -80,12 +80,7 @@ export function Sidebar({ className }: SidebarProps) {
             </div>
 
             <div className="p-6">
-                <div className="flex items-center gap-3">
-                    <UserNav />
-                    <div className="flex flex-col">
-                        <span className="text-sm font-medium text-[#8D7B68]">My Account</span>
-                    </div>
-                </div>
+                <UserNav />
             </div>
         </div>
     )

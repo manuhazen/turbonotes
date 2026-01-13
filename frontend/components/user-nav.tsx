@@ -30,8 +30,6 @@ export function UserNav() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10 border border-[#D7CCC8]">
-                        {/* We don't have user images yet, so just fallback */}
-                        {/* <AvatarImage src="/avatars/01.png" alt="@shadcn" /> */}
                         <AvatarFallback className="bg-[#F9F4E8] text-[#8D7B68] font-bold">
                             {isLoading ? '...' : initials}
                         </AvatarFallback>

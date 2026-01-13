@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import QueryProvider from "@/components/providers/query-provider";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -29,7 +30,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

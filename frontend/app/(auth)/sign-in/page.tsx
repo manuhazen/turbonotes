@@ -14,7 +14,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { AuthHeader } from "@/components/auth-header"
+import { useLogin } from "@/hooks/use-auth"
 
 
 
@@ -36,10 +38,10 @@ export default function SignInPage() {
         },
     })
 
+    const login = useLogin();
+
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+        login.mutate({ email: values.email, password: values.password });
     }
 
     return (
@@ -74,8 +76,7 @@ export default function SignInPage() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input
-                                        type="password"
+                                    <PasswordInput
                                         placeholder="Password"
                                         className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
                                         {...field}

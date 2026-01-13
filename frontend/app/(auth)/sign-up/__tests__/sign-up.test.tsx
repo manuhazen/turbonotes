@@ -2,6 +2,13 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import SignUpPage from "../page";
 
+jest.mock("@/hooks/use-auth", () => ({
+    useRegister: () => ({
+        mutate: jest.fn(),
+        isPending: false,
+    }),
+}));
+
 // Mock next/image since it uses heavy optimization features
 jest.mock('next/image', () => ({
     __esModule: true,
@@ -15,6 +22,8 @@ describe("SignUpPage", () => {
         render(<SignUpPage />);
 
         expect(screen.getByText("Yay, New Friend!")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("First Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Last Name")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Email address")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Sign Up" })).toBeInTheDocument();

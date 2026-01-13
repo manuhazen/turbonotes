@@ -14,7 +14,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { AuthHeader } from "@/components/auth-header"
+import { useRegister } from "@/hooks/use-auth"
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -25,6 +27,8 @@ const formSchema = z.object({
     password: z.string().regex(passwordRegex, {
         message: "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
     }),
+    first_name: z.string().min(2, { message: "First name must be at least 2 characters" }),
+    last_name: z.string().min(2, { message: "Last name must be at least 2 characters" }),
 })
 
 export default function SignUpPage() {
@@ -33,13 +37,21 @@ export default function SignUpPage() {
         defaultValues: {
             email: "",
             password: "",
+            first_name: "",
+            last_name: "",
         },
     })
 
+    const register = useRegister();
+
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+        register.mutate({
+            email: values.email,
+            password: values.password,
+            re_password: values.password, // djoser requires re_password
+            first_name: values.first_name,
+            last_name: values.last_name
+        });
     }
 
     return (
@@ -68,14 +80,47 @@ export default function SignUpPage() {
                             </FormItem>
                         )}
                     />
+                    <div className="flex gap-4">
+                        <FormField
+                            control={form.control}
+                            name="first_name"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormControl>
+                                        <Input
+                                            placeholder="First Name"
+                                            className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="last_name"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Last Name"
+                                            className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <FormField
                         control={form.control}
                         name="password"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input
-                                        type="password"
+                                    <PasswordInput
                                         placeholder="Password"
                                         className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
                                         {...field}

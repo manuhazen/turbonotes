@@ -1,14 +1,25 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { NoteCard } from "../ui/note-card";
 import { Button } from "../ui/button";
 import { CloseButton } from "../ui/close-button";
 import { CategorySelect } from "../ui/category-select";
+import { PasswordInput } from "../ui/password-input";
+import { Input } from "../ui/input";
+import { Select } from "../ui/select";
 
 // Mock Lucide X icon since we don't need to test the svg path
 jest.mock('lucide-react', () => ({
-    X: () => <span data-testid="x-icon">X Icon</span>
+    X: () => <span data-testid="x-icon">X Icon</span>,
+    Eye: () => <span data-testid="eye-icon">Eye Icon</span>,
+    EyeOff: () => <span data-testid="eye-off-icon">EyeOff Icon</span>,
+    CheckIcon: () => <span data-testid="check-icon">CheckIcon</span>,
+    ChevronDownIcon: () => <span data-testid="chevron-down-icon">ChevronDownIcon</span>,
+    ChevronUpIcon: () => <span data-testid="chevron-up-icon">ChevronUpIcon</span>
 }));
+
+
+
 
 describe("NoteCard", () => {
     it("renders with title, content, and category info", () => {
@@ -51,6 +62,25 @@ describe("Button", () => {
         expect(button).toHaveClass("bg-transparent");
         // Check hover class existence (text search in className)
         expect(button.className).toContain("hover:bg-[#8D7B68]");
+    });
+});
+
+describe("PasswordInput", () => {
+    it("toggles password visibility", () => {
+        render(<PasswordInput placeholder="Enter password" />);
+        const input = screen.getByPlaceholderText("Enter password");
+        const toggleButton = screen.getByRole("button");
+
+        // Initially password type
+        expect(input).toHaveAttribute("type", "password");
+
+        // Click to show
+        fireEvent.click(toggleButton);
+        expect(input).toHaveAttribute("type", "text");
+
+        // Click to hide
+        fireEvent.click(toggleButton);
+        expect(input).toHaveAttribute("type", "password");
     });
 });
 

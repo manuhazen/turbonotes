@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import { loginUser, registerUser, logoutUser, LoginCredentials, RegisterCredentials } from '@/lib/api/auth';
+import { loginUser, registerUser, logoutUser, getCurrentUser, LoginCredentials, RegisterCredentials } from '@/lib/api/auth';
 
 export const useLogin = () => {
     const router = useRouter();
@@ -38,5 +38,13 @@ export const useLogout = () => {
             queryClient.clear();
             router.push('/sign-in');
         },
+    });
+};
+
+export const useUser = () => {
+    return useQuery({
+        queryKey: ['user'],
+        queryFn: getCurrentUser,
+        retry: false,
     });
 };

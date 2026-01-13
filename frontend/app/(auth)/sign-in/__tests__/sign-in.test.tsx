@@ -2,6 +2,21 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import SignInPage from "../page";
 
+// Mock hooks
+jest.mock("@/hooks/use-auth", () => ({
+    useLogin: jest.fn(() => ({
+        mutate: jest.fn(),
+        isPending: false,
+    })),
+}));
+
+// Mock useRouter
+jest.mock("next/navigation", () => ({
+    useRouter: () => ({
+        push: jest.fn(),
+    }),
+}));
+
 // Mock next/image since it uses heavy optimization features
 jest.mock('next/image', () => ({
     __esModule: true,

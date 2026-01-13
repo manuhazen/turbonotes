@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import QueryProvider from "@/components/providers/query-provider";
+import { Toaster } from 'sonner';
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -32,6 +33,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             {children}
+            <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>
       </body>

@@ -1,25 +1,33 @@
-"use client";
+import { Suspense } from "react"
+import Link from "next/link"
+import { Plus } from "lucide-react"
 
-import { useLogout } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
+import { Sidebar } from "@/components/sidebar"
+import { NotesList } from "@/components/notes-list"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
-  const logout = useLogout();
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
-      <p className="text-lg text-muted-foreground mb-8">
-        Welcome to your notes dashboard.
-      </p>
+    <div className="flex h-screen bg-[#FDFBF7]">
+      <Suspense fallback={<div className="w-[240px] border-r border-[#EDDDD4] h-screen bg-[#FDFBF7]" />}>
+        <Sidebar />
+      </Suspense>
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className="flex items-center justify-end p-8 pb-4">
+          <Button asChild className="rounded-full bg-transparent text-[#8D7B68] hover:bg-[#8D7B68]/10 border border-[#8D7B68] h-12 px-6 font-medium text-base shadow-sm">
+            <Link href="/new-note">
+              <Plus className="mr-2 h-5 w-5" />
+              New Note
+            </Link>
+          </Button>
+        </div>
 
-      <Button
-        variant="destructive"
-        onClick={() => logout.mutate()}
-        disabled={logout.isPending}
-      >
-        {logout.isPending ? "Logging out..." : "Logout"}
-      </Button>
+        <div className="flex-1 overflow-y-auto p-8 pt-4">
+          <Suspense fallback={<div>Loading notes...</div>}>
+            <NotesList />
+          </Suspense>
+        </div>
+      </main>
     </div>
-  );
+  )
 }

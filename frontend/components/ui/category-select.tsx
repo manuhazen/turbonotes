@@ -18,11 +18,12 @@ interface CategorySelectProps {
     placeholder?: string;
     onChange?: (value: string) => void;
     defaultValue?: string;
+    value?: string;
 }
 
-export function CategorySelect({ categories, placeholder = "Select category", onChange, defaultValue }: CategorySelectProps) {
+export function CategorySelect({ categories, placeholder = "Select category", onChange, defaultValue, value }: CategorySelectProps) {
     return (
-        <Select onValueChange={onChange} defaultValue={defaultValue}>
+        <Select onValueChange={onChange} defaultValue={defaultValue} value={value}>
             <SelectTrigger className="w-[200px] bg-[#F9F4E8] border-[#D7CCC8] text-[#8D7B68] rounded-md h-10">
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>
@@ -30,7 +31,7 @@ export function CategorySelect({ categories, placeholder = "Select category", on
                 {categories.map((category) => (
                     <SelectItem
                         key={category.id}
-                        value={category.id}
+                        value={String(category.id)}
                         className="text-[#8D7B68] focus:bg-[#F9F4E8] focus:text-[#8D7B68] cursor-pointer"
                     >
                         <div className="flex items-center gap-2">

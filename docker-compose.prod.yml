@@ -1,0 +1,60 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    environment:
+      - DEBUG=False
+      - POSTGRES_DB=turbonotes
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - ALLOWED_HOSTS=backend,localhost,127.0.0.1
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    expose:
+      - "3000"
+    # In production, Next.js build uses environment variables at build time usually,
+    # but run time vars are also possible.
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/backend/staticfiles
+      - media_volume:/app/backend/media
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=turbonotes
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

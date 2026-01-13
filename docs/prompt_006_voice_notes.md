@@ -1,0 +1,1 @@
+We need to implement something new in the Note model, we want our models to have voice notes or text or both. We need to take care about that in the models of Notes and provide a clear API to the frontend to upload it.

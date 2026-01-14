@@ -82,3 +82,14 @@
 
 **Execution**:
 - Changed "No categories." to "No flavors mixed yet." in `components/sidebar.tsx`.
+
+## 16. PWA & Favicon Implementation
+**Date**: 2026-01-14
+**Action**: Generated icons and configured PWA manifest.
+**Prompt/Context**:
+> We need to address something, I want to add a favicon for the page and also prepare the icons to make this app offline in advance... Let's use the bobba image.
+
+**Execution**:
+- Created `manifest.json`.
+- Generated `favicon.ico`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` from `bobba.png`.
+- Updated `app/layout.tsx` metadata.

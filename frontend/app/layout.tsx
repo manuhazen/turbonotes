@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     template: "%s | TurboNotes"
   },
   description: "Capture your ideas instantly",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 const geistSans = Geist({

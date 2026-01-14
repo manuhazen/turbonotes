@@ -9,3 +9,4 @@ pytest-cov==5.0.0
 sqlparse==0.5.5
 psycopg2-binary==2.9.11
 django-cors-headers==4.9.0
+gunicorn==21.2.0

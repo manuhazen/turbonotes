@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { AuthHeader } from "@/components/auth-header"
 import { useRegister } from "@/hooks/use-auth"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -80,6 +82,17 @@ export default function SignUpClient() {
                             </FormItem>
                         )}
                     />
+                    {register.isError && (
+                        <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>
+                                {(register.error as any)?.response?.data?.email
+                                    ? "This email address is already in use. Maybe you want to login instead?"
+                                    : (register.error instanceof Error ? register.error.message : "Registration failed")}
+                            </AlertDescription>
+                        </Alert>
+                    )}
                     <div className="flex gap-4">
                         <FormField
                             control={form.control}

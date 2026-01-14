@@ -110,7 +110,16 @@ export default function NoteClient({ id }: { id: string }) {
     return (
         <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 flex flex-col transition-colors duration-300">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full">
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    onKeyDown={(e) => {
+                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                            e.preventDefault()
+                            form.handleSubmit(onSubmit)()
+                        }
+                    }}
+                    className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full"
+                >
 
                     {/* Header Controls (Outside Card) */}
                     <div className="flex justify-between items-center mb-6 px-1">
@@ -227,7 +236,10 @@ export default function NoteClient({ id }: { id: string }) {
                         />
 
                         {/* Floating Save Button */}
-                        <div className="absolute bottom-8 right-8">
+                        <div className="absolute bottom-8 right-8 flex flex-col items-center gap-2">
+                            <span className="text-xs text-black/40 font-medium hidden md:block pointer-events-none select-none">
+                                ⌘ + Enter
+                            </span>
                             {/* Show save button when dirty? Or always? Let's show always for explicit save action to feel secure */}
                             <Button
                                 type="submit"

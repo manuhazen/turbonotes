@@ -17,13 +17,15 @@ import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { AuthHeader } from "@/components/auth-header"
 import { useLogin } from "@/hooks/use-auth"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 const formSchema = z.object({
     email: z.string().email({
         message: "Please enter a valid email address.",
     }),
     password: z.string().min(8, {
-        message: "Password is required",
+        message: "Password must be at least 8 characters.",
     }),
 })
 
@@ -52,6 +54,18 @@ export default function SignInClient() {
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    {login.isError && (
+                        <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>
+                                {login.error instanceof Error && (login.error.message.includes("400") || login.error.message.includes("401"))
+                                    ? "Bad credentials provided. Please check your email or password."
+                                    : (login.error instanceof Error ? login.error.message : "An error occurred during login")
+                                }
+                            </AlertDescription>
+                        </Alert>
+                    )}
                     <FormField
                         control={form.control}
                         name="email"
@@ -88,8 +102,9 @@ export default function SignInClient() {
                     <Button
                         type="submit"
                         className="w-full h-12 rounded-full bg-[#f4eadd] text-[#8D7B68] hover:bg-[#eaddcf] border border-[#8D7B68] text-base font-semibold"
+                        disabled={login.isPending}
                     >
-                        Login
+                        {login.isPending ? "Logging in..." : "Login"}
                     </Button>
                 </form>
             </Form>

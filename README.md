@@ -55,16 +55,32 @@ docker compose up --build
 - **Backend API**: [http://localhost:8000/api](http://localhost:8000/api)
 - **API Documentation**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
 
-### Testing
+### Backend Testing
 
 The project maintains high test coverage >90% for the backend.
 
 ```bash
-# Run all backend tests
+# Run all backend tests (via Docker)
 docker compose run --rm backend pytest
 
-# Run specific tests (e.g., voice notes)
+# Run specific tests
 docker compose run --rm backend pytest notes/tests/test_voice_notes.py
+```
+
+### Frontend Testing
+
+Unit tests are powered by Jest and React Testing Library.
+
+```bash
+# Run all frontend tests
+cd frontend
+npm test
+
+# Run tests in watch mode (interactive)
+npm test -- --watch
+
+# Run a specific test file
+npm test components/__tests__/sidebar.test.tsx
 ```
 
 ### Production Deployment

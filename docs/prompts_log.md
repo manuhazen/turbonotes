@@ -50,3 +50,16 @@
 **Execution**:
 - Created `docs/digital_ocean_deployment.md` with instructions for App Platform and Droplet.
 - Reviewed `docker-compose.yml` for production compatibility.
+
+## 12. Frontend Tweaks: Login Error, Mobile Drawer, Save Shortcut
+**Date**: 2026-01-14
+**Action**: Implemented login error component, mobile sidebar drawer, and save shortcut.
+**Prompt/Context**:
+> - Error message when the user put bad credentials and cannot login (like bad password)
+> - We need to make this app more responsive for mobiles, the sidebar should be on a Drawer by shadcnui (npx shadcn@latest add drawer) and put everything there
+> - Enter a control + enter in the notes to save it, also we can put a hint for the user to know if the user hit control + enter he can save the note.
+
+**Execution**:
+- **Login**: Added `Alert` component to `sign-in/client.tsx` to display API errors.
+- **Mobile**: Refactored `components/sidebar.tsx` to use `Drawer` (shadcn) on mobile (md:hidden) and fixed sidebar on desktop.
+- **Shortcuts**: Added `CTRL/CMD + Enter` handler in `note/[id]/client.tsx` and a visual hint.

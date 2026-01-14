@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils"
 import { useCategories } from "@/hooks/use-notes"
 import { CreateCategoryDialog } from "@/components/create-category-dialog"
 import { UserNav } from "@/components/user-nav"
-import { CategorySelect } from "@/components/ui/category-select" // Re-using but maybe better to make a list since sidebar
+import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Menu } from "lucide-react"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
-export function Sidebar({ className }: SidebarProps) {
+export function SidebarContent({ className, onItemClick }: { className?: string, onItemClick?: () => void }) {
     const { data: categories, isLoading } = useCategories()
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -26,10 +28,11 @@ export function Sidebar({ className }: SidebarProps) {
             params.set("category", categoryId)
         }
         router.replace(`${pathname}?${params.toString()}`)
+        if (onItemClick) onItemClick()
     }
 
     return (
-        <div className={cn("pb-12 w-[240px] flex flex-col h-screen bg-[#FDFBF7]", className)}>
+        <div className={cn("pb-12 w-full flex flex-col h-full bg-[#FDFBF7]", className)}>
             <div className="space-y-4 py-8 flex-1">
                 <div className="px-6 py-2">
                     <div className="space-y-1">
@@ -40,6 +43,7 @@ export function Sidebar({ className }: SidebarProps) {
                                 const params = new URLSearchParams(searchParams)
                                 params.delete("category")
                                 router.replace(`${pathname}?${params.toString()}`)
+                                if (onItemClick) onItemClick()
                             }}
                             className="w-full justify-start text-left font-bold px-2 py-1.5 rounded-lg transition-colors flex items-center gap-3 text-sm text-black hover:bg-black/5"
                         >
@@ -68,7 +72,6 @@ export function Sidebar({ className }: SidebarProps) {
                                     style={{ backgroundColor: category.color }}
                                 />
                                 <span className="truncate">{category.name}</span>
-                                {/* Optional: Add count here if available in the future */}
                             </button>
                         ))}
 
@@ -83,5 +86,36 @@ export function Sidebar({ className }: SidebarProps) {
                 <UserNav />
             </div>
         </div>
+    )
+}
+
+export function Sidebar({ className }: SidebarProps) {
+    const [open, setOpen] = React.useState(false)
+
+    return (
+        <>
+            {/* Desktop Sidebar */}
+            <div className={cn("hidden md:flex flex-col h-screen w-[240px] bg-[#FDFBF7]", className)}>
+                <SidebarContent />
+            </div>
+
+            {/* Mobile Drawer Trigger */}
+            <div className="md:hidden fixed top-4 left-4 z-40">
+                <Drawer open={open} onOpenChange={setOpen}>
+                    <DrawerTrigger asChild>
+                        <Button variant="ghost" size="icon" aria-label="Open sidebar">
+                            <Menu className="h-6 w-6" />
+                        </Button>
+                    </DrawerTrigger>
+                    <DrawerContent className="h-[85vh] bg-[#FDFBF7]">
+                        <DrawerHeader className="sr-only">
+                            <DrawerTitle>Sidebar Menu</DrawerTitle>
+                            <DrawerDescription>Navigation links and categories</DrawerDescription>
+                        </DrawerHeader>
+                        <SidebarContent onItemClick={() => setOpen(false)} />
+                    </DrawerContent>
+                </Drawer>
+            </div>
+        </>
     )
 }

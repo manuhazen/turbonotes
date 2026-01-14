@@ -5,6 +5,7 @@ import { useNote, useUpdateNote, useDeleteNote, useCategories } from "@/hooks/us
 import { Button } from "@/components/ui/button"
 import { CloseButton } from "@/components/ui/close-button"
 import { Check, Trash2 } from "lucide-react"
+import { useDebouncedCallback } from "use-debounce"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -53,23 +54,60 @@ export default function NoteClient({ id }: { id: string }) {
         },
     })
 
-    // Watch category for background color
-    const selectedCategoryId = form.watch("category")
+    // Watch values for auto-save
+    const values = form.watch()
+    const selectedCategoryId = values.category
+
+    const debouncedUpdate = useDebouncedCallback((values: z.infer<typeof formSchema>) => {
+        if (!values.title) return
+
+        updateNote.mutate({
+            id,
+            data: {
+                title: values.title,
+                description: values.description,
+                category: values.category || null,
+            }
+        })
+    }, 1000)
+
+    // Trigger debounce when values change
+    useEffect(() => {
+        // Only trigger if form is dirty or we have values (and note is loaded)
+        if (note && form.formState.isDirty) {
+            debouncedUpdate(values)
+        }
+    }, [values, debouncedUpdate, note, form.formState.isDirty])
+
 
     // Populate form when note data is loaded
     useEffect(() => {
         if (note) {
             const categoryId = note.category ? String(note.category) : ""
 
-            form.reset({
-                title: note.title,
-                description: note.description,
-                category: categoryId,
-            })
+            // Only reset if not dirty to avoid overwriting user typing if re-fetch happens?
+            // Actually, keep simple: only reset on initial load or if id changes.
+            // But isLoading handles initial load. 
+            // Better to check if values match to avoid loop? 
+            // useForm defaultValues handles initial. reset handles updates.
+            // If we are auto-saving, local state is truth.
+            // So only reset if *new* note loaded (id changed) or first load.
+            // checking note.id vs id prop is good but id prop doesn't change here.
+            // We can rely on form.reset only running once per note load ideally.
+            // But note object technically changes on update because of updated_at.
+            // We should NOT reset form if form is dirty?
+            if (!form.formState.isDirty) {
+                form.reset({
+                    title: note.title,
+                    description: note.description,
+                    category: categoryId,
+                })
+            }
         }
-    }, [note, form])
+    }, [note, form]) // Removing form.formState.isDirty from deps to avoid loop? No, inside is fine.
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        // Manual submit if needed, but we rely on auto-save
         updateNote.mutate({
             id,
             data: {
@@ -81,7 +119,6 @@ export default function NoteClient({ id }: { id: string }) {
     }
 
     // Determine dynamic background color
-    // Use form state, fallback to note's current color, or default
     const currentCategory = categories?.find(c => String(c.id) === String(selectedCategoryId))
     const bgColor = currentCategory ? currentCategory.color : (note?.category_color || "#FDFBF7")
 
@@ -107,17 +144,21 @@ export default function NoteClient({ id }: { id: string }) {
     // Sort categories for consistency
     const sortedCategories = categories?.sort((a, b) => a.name.localeCompare(b.name)) || []
 
+    // Prevent enter = submit
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault()
+            // Maybe force immediate save?
+            debouncedUpdate.flush()
+        }
+    }
+
     return (
         <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 flex flex-col transition-colors duration-300">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    onKeyDown={(e) => {
-                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                            e.preventDefault()
-                            form.handleSubmit(onSubmit)()
-                        }
-                    }}
+                    onKeyDown={handleKeyDown}
                     className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full"
                 >
 
@@ -135,7 +176,6 @@ export default function NoteClient({ id }: { id: string }) {
                                                     categories={sortedCategories}
                                                     placeholder="Select Category"
                                                     onChange={(val) => {
-                                                        // Prevent automatic resets if value is invalid/not found
                                                         if (val) {
                                                             field.onChange(val)
                                                         }
@@ -157,7 +197,7 @@ export default function NoteClient({ id }: { id: string }) {
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 text-[#8D7B68]/60 hover:text-red-500 hover:bg-red-50"
+                                        className="h-8 w-8 text-[#ef5350] hover:text-[#d32f2f] hover:bg-[#ef5350]/10"
                                         disabled={deleteNote.isPending}
                                         aria-label="Delete Note"
                                     >
@@ -196,7 +236,7 @@ export default function NoteClient({ id }: { id: string }) {
                     >
                         {/* Last Edited */}
                         <div className="absolute top-8 right-8 text-xs font-medium text-black/40">
-                            Last Edited: {new Date(note.updated_at).toLocaleString()}
+                            {updateNote.isPending ? 'Saving...' : `Last Edited: ${new Date(note.updated_at).toLocaleString()}`}
                         </div>
 
                         {/* Title Input */}
@@ -235,25 +275,11 @@ export default function NoteClient({ id }: { id: string }) {
                             )}
                         />
 
-                        {/* Floating Save Button */}
-                        <div className="absolute bottom-8 right-8 flex flex-col items-center gap-2">
-                            <span className="text-xs text-black/40 font-medium hidden md:block pointer-events-none select-none">
-                                ⌘ + Enter
-                            </span>
-                            {/* Show save button when dirty? Or always? Let's show always for explicit save action to feel secure */}
-                            <Button
-                                type="submit"
-                                size="icon"
-                                className="rounded-full w-14 h-14 bg-[#333] text-white hover:bg-black shadow-lg"
-                                disabled={updateNote.isPending || !form.formState.isDirty} // Only enable if dirty? Or always allow re-save? "Update it right away"
-                                aria-label="Save Note"
-                            >
-                                <Check className="h-6 w-6" />
-                            </Button>
-                        </div>
+                        {/* No submit button here anymore */}
                     </div>
                 </form>
             </Form>
         </div>
     )
 }
+

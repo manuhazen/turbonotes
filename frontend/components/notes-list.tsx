@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation"
 import { useNotes } from "@/hooks/use-notes"
 import { NoteCard } from "@/components/ui/note-card"
 import Link from "next/link"
+import { cn, humanizeDate } from "@/lib/utils"
 
 export function NotesList() {
     const searchParams = useSearchParams()
@@ -45,7 +46,7 @@ export function NotesList() {
                 <Link key={note.id} href={`/note/${note.id}`} className="h-full block">
                     <NoteCard
                         title={note.title}
-                        date={new Date(note.updated_at).toLocaleDateString()}
+                        date={humanizeDate(note.updated_at)}
                         category={{
                             name: note.category_name || "Uncategorized",
                             color: note.category_color || "#F9F4E8"

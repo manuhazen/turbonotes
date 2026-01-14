@@ -5,14 +5,31 @@ from notes.models import Note, Category
 class TestModels:
     def test_category_creation(self, user):
         category = Category.objects.create(
-            name="Personal",
+            name="Work Stuff",
             color="#FF0000",
             creator=user
         )
-        assert category.name == "Personal"
+        assert category.name == "Work Stuff"
         assert category.color == "#FF0000"
         assert category.creator == user
-        assert str(category) == "Personal"
+        assert str(category) == "Work Stuff"
+
+    def test_category_uniqueness(self, user):
+        from django.db import transaction
+        
+        # "Personal" is already created by signal for this user
+        with pytest.raises(Exception): 
+            with transaction.atomic():
+                Category.objects.create(name="Personal", color="#FFFFFF", creator=user)
+        
+        # Test creating a new unique one works
+        Category.objects.create(name="Unique", color="#000000", creator=user)
+        # And failing to dupe it
+        with pytest.raises(Exception):
+            with transaction.atomic():
+                Category.objects.create(name="Unique", color="#FFFFFF", creator=user)
+
+
 
     def test_note_creation(self, user):
         category = Category.objects.create(

@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Check } from "lucide-react"
+import { useDebouncedCallback } from "use-debounce"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -30,6 +32,7 @@ const formSchema = z.object({
 export default function NewNoteClient() {
     const createNote = useCreateNote()
     const { data: rawCategories } = useCategories()
+    const router = useRouter()
 
     // Sort categories alphabetically
     const categories = rawCategories?.sort((a, b) => a.name.localeCompare(b.name))
@@ -43,14 +46,38 @@ export default function NewNoteClient() {
         },
     })
 
-    // Watch category for auto-selection and background color
-    const selectedCategoryId = form.watch("category")
+    // Watch values for auto-save
+    const values = form.watch()
+    const selectedCategoryId = values.category
+
+    const debouncedCreate = useDebouncedCallback((values: z.infer<typeof formSchema>) => {
+        if (!values.title) return // Don't create without title
+
+        createNote.mutate({
+            title: values.title,
+            description: values.description,
+            category: values.category || null,
+        }, {
+            onSuccess: (data) => {
+                // Redirect to edit mode to prevent duplicates
+                router.replace(`/note/${data.id}`)
+            }
+        })
+    }, 1000)
+
+    // Trigger debounce when values change
+    useEffect(() => {
+        if (values.title) {
+            debouncedCreate(values)
+        }
+    }, [values, debouncedCreate])
+
 
     // Auto-select first category
     useEffect(() => {
         if (categories && categories.length > 0 && !selectedCategoryId) {
             const firstCategory = categories[0]
-            form.setValue("category", String(firstCategory.id)) // Ensure string
+            form.setValue("category", String(firstCategory.id))
         }
     }, [categories, selectedCategoryId, form])
 
@@ -58,20 +85,22 @@ export default function NewNoteClient() {
     const selectedCategory = categories?.find(c => String(c.id) === String(selectedCategoryId))
     const bgColor = selectedCategory?.color || "#FDFBF7" // Default beige
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        createNote.mutate({
-            title: values.title,
-            description: values.description,
-            category: values.category || null,
-        })
+    // Prevent enter to submit
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault()
+        }
     }
 
     return (
         <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 flex flex-col transition-colors duration-300">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full">
+                <form
+                    className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full"
+                    onKeyDown={handleKeyDown}
+                >
 
-                    {/* Header Controls (Outside Card) */}
+                    {/* Header Controls */}
                     <div className="flex justify-between items-center mb-6 px-1">
                         <FormField
                             control={form.control}
@@ -103,11 +132,6 @@ export default function NewNoteClient() {
                         className="flex-1 rounded-[32px] p-8 md:p-12 relative flex flex-col shadow-sm transition-colors duration-300"
                         style={{ backgroundColor: bgColor }}
                     >
-                        {/* Last Edited (Placeholder for new note) */}
-                        <div className="absolute top-8 right-8 text-xs font-medium text-black/40">
-                            {/* New Note */}
-                        </div>
-
                         {/* Title Input */}
                         <FormField
                             control={form.control}
@@ -144,17 +168,13 @@ export default function NewNoteClient() {
                             )}
                         />
 
-                        {/* Floating Action Button */}
-                        <div className="absolute bottom-8 right-8 flex gap-4">
-                            <Button
-                                type="submit"
-                                size="icon"
-                                className="rounded-full w-14 h-14 bg-[#333] text-white hover:bg-black shadow-lg"
-                                disabled={createNote.isPending}
-                                aria-label="Save Note"
-                            >
-                                <Check className="h-6 w-6" />
-                            </Button>
+                        {/* Loading Indicator instead of Save Button */}
+                        <div className="absolute bottom-8 right-8">
+                            {createNote.isPending && (
+                                <div className="text-black/40 text-sm font-medium animate-pulse">
+                                    Saving...
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -163,3 +183,4 @@ export default function NewNoteClient() {
         </div>
     )
 }
+

@@ -16,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { AuthHeader } from "@/components/auth-header"
-import { useRegister } from "@/hooks/use-auth"
+import { useRegister, useLogin } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
@@ -29,30 +30,45 @@ const formSchema = z.object({
     password: z.string().regex(passwordRegex, {
         message: "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
     }),
+    re_password: z.string(),
     first_name: z.string().min(2, { message: "First name must be at least 2 characters" }),
     last_name: z.string().min(2, { message: "Last name must be at least 2 characters" }),
-})
+}).refine((data) => data.password === data.re_password, {
+    message: "Passwords do not match",
+    path: ["re_password"],
+});
 
 export default function SignUpClient() {
+    const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: "",
+            re_password: "",
             first_name: "",
             last_name: "",
         },
     })
 
     const register = useRegister();
+    const login = useLogin();
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         register.mutate({
             email: values.email,
             password: values.password,
-            re_password: values.password, // djoser requires re_password
+            re_password: values.re_password,
             first_name: values.first_name,
             last_name: values.last_name
+        }, {
+            onSuccess: () => {
+                // Auto login after sign up
+                login.mutate({
+                    email: values.email,
+                    password: values.password
+                })
+            }
         });
     }
 
@@ -143,6 +159,23 @@ export default function SignUpClient() {
                             </FormItem>
                         )}
                     />
+                    <FormField
+                        control={form.control}
+                        name="re_password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <PasswordInput
+                                        placeholder="Repeat Password"
+                                        className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage className="text-red-500" />
+                            </FormItem>
+                        )}
+                    />
+
 
                     <Button
                         type="submit"

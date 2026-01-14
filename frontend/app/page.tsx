@@ -15,7 +15,7 @@ export default function Home() {
       </Suspense>
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <div className="flex items-center justify-end p-8 pb-4">
-          <Button asChild className="rounded-full bg-transparent text-[#8D7B68] hover:bg-[#8D7B68]/10 border border-[#8D7B68] h-12 px-6 font-medium text-base shadow-sm">
+          <Button asChild className="rounded-full bg-transparent text-[#8D7B68] border border-[#8D7B68] hover:bg-[#8D7B68] hover:text-[#FDFBF7] h-12 px-6 font-medium text-base shadow-md transition-all">
             <Link href="/new-note">
               <Plus className="mr-2 h-5 w-5" />
               New Note

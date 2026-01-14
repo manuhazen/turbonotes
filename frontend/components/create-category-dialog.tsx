@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { ColorPicker, THEME_COLORS } from "@/components/color-picker"
-import { useCreateCategory } from "@/hooks/use-notes"
+import { useCreateCategory, useCategories } from "@/hooks/use-notes"
 
 const formSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -36,6 +36,7 @@ const formSchema = z.object({
 export function CreateCategoryDialog() {
     const [open, setOpen] = useState(false)
     const createCategory = useCreateCategory()
+    const { data: categories } = useCategories() // Get existing categories
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -46,6 +47,18 @@ export function CreateCategoryDialog() {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        // Check for duplicates
+        const normalizedName = values.name.trim().toLowerCase()
+        const exists = categories?.some((cat: { name: string }) => cat.name.toLowerCase() === normalizedName)
+
+        if (exists) {
+            form.setError("name", {
+                type: "manual",
+                message: "Category already exists"
+            })
+            return
+        }
+
         createCategory.mutate(values, {
             onSuccess: () => {
                 setOpen(false)

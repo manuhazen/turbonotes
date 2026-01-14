@@ -37,7 +37,6 @@ export const useCreateNote = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notes'] });
             toast.success('Note created successfully');
-            router.push('/');
         },
         onError: () => {
             toast.error('Failed to create note');

@@ -21,8 +21,7 @@ export const useRegister = () => {
     return useMutation({
         mutationFn: (credentials: RegisterCredentials) => registerUser(credentials),
         onSuccess: () => {
-            // Potentially auto-login or redirect to login
-            router.push('/sign-in');
+            // router.push('/sign-in');
         },
     });
 };

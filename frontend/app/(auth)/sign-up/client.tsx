@@ -79,6 +79,27 @@ export default function SignUpClient() {
         });
     }
 
+
+    const isLoading = register.isPending || login.isPending || register.isSuccess;
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+                <div className="w-16 h-16 relative">
+                    <img
+                        src="/lazy_cow.png"
+                        alt="Loading..."
+                        className="w-full h-full object-contain animate-bounce"
+                    />
+                </div>
+                <h2 className="text-xl font-semibold text-[#8D7B68]">
+                    {register.isPending ? "Creating your account..." : "Setting up your space..."}
+                </h2>
+                <p className="text-[#BCAAA4]">Almost there!</p>
+            </div>
+        )
+    }
+
     return (
         <div className="w-full max-w-[400px]">
             <AuthHeader
@@ -187,6 +208,7 @@ export default function SignUpClient() {
                     <Button
                         type="submit"
                         className="w-full h-12 rounded-full bg-[#f4eadd] text-[#8D7B68] hover:bg-[#eaddcf] border border-[#8D7B68] text-base font-semibold"
+                        disabled={isLoading}
                     >
                         Sign Up
                     </Button>
@@ -200,4 +222,5 @@ export default function SignUpClient() {
             </div>
         </div>
     )
+
 }

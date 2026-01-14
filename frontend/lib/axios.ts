@@ -21,6 +21,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        if (error.response && error.response.status === 401) {
+            // Auto logout if 401
+            Cookies.remove('token');
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/sign-in')) {
+                window.location.href = '/sign-in';
+            }
+        }
         return Promise.reject(error);
     }
 );

@@ -195,8 +195,8 @@ export function NoteEditor({
                         style={{ backgroundColor: bgColor }}
                     >
                         {/* Last Edited or Saving Indicator */}
-                        <div className="absolute top-8 right-8 text-xs font-medium text-black/40">
-                            {isSaving ? 'Saving...' : (lastEditedAt ? `Last Edited: ${new Date(lastEditedAt).toLocaleString()}` : '')}
+                        <div className="absolute top-8 right-8 text-xs font-medium text-black/40 transition-opacity duration-300">
+                            {isSaving ? 'Saving...' : (lastEditedAt ? `Last Edited: ${new Date(lastEditedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : '')}
                         </div>
 
                         {/* Title */}

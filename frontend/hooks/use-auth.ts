@@ -16,7 +16,7 @@ export const useLogin = () => {
 };
 
 export const useRegister = () => {
-    const router = useRouter();
+
 
     return useMutation({
         mutationFn: (credentials: RegisterCredentials) => registerUser(credentials),

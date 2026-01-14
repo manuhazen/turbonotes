@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import Link from "next/link"
+import NextImage from "next/image"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -86,9 +87,11 @@ export default function SignUpClient() {
         return (
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <div className="w-16 h-16 relative">
-                    <img
+                    <NextImage
                         src="/lazy_cow.png"
                         alt="Loading..."
+                        width={64}
+                        height={64}
                         className="w-full h-full object-contain animate-bounce"
                     />
                 </div>

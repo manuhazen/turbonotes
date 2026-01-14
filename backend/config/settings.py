@@ -107,6 +107,16 @@ DJOSER = {
     'HIDE_USERS': False,
 }
 
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Token',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 # Spectacular
 SPECTACULAR_SETTINGS = {
     'TITLE': 'TurboNotes API',

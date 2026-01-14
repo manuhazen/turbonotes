@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { AuthHeader } from "@/components/auth-header"
 import { useRegister, useLogin } from "@/hooks/use-auth"
-import { useRouter } from "next/navigation"
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
@@ -38,8 +38,15 @@ const formSchema = z.object({
     path: ["re_password"],
 });
 
+interface ApiError {
+    response?: {
+        data?: {
+            email?: string[]
+        }
+    }
+}
+
 export default function SignUpClient() {
-    const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -103,7 +110,7 @@ export default function SignUpClient() {
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
                             <AlertDescription>
-                                {(register.error as any)?.response?.data?.email
+                                {(register.error as unknown as ApiError)?.response?.data?.email
                                     ? "This email address is already in use. Maybe you want to login instead?"
                                     : (register.error instanceof Error ? register.error.message : "Registration failed")}
                             </AlertDescription>
@@ -188,7 +195,7 @@ export default function SignUpClient() {
 
             <div className="mt-6 text-center">
                 <Link href="/sign-in" className="text-[#BCAAA4] hover:underline text-sm">
-                    We're already friends!
+                    We&apos;re already friends!
                 </Link>
             </div>
         </div>

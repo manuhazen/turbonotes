@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface CloseButtonProps extends React.ComponentProps<typeof Button> { }
+type CloseButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function CloseButton({ className, ...props }: CloseButtonProps) {
     return (

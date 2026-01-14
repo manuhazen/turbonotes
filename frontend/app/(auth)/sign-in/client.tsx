@@ -111,7 +111,7 @@ export default function SignInClient() {
 
             <div className="mt-6 text-center">
                 <Link href="/sign-up" className="text-[#BCAAA4] hover:underline text-sm">
-                    Oops! I've never been here before
+                    Oops! I&apos;ve never been here before
                 </Link>
             </div>
         </div>

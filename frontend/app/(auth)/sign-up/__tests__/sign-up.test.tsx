@@ -10,9 +10,11 @@ jest.mock("@/hooks/use-auth", () => ({
 }));
 
 // Mock next/image since it uses heavy optimization features
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable jsx-a11y/alt-text */
 jest.mock('next/image', () => ({
     __esModule: true,
-    default: ({ fill, priority, ...props }: any) => {
+    default: ({ fill, priority, ...props }: { fill?: boolean; priority?: boolean;[key: string]: unknown }) => {
         return <img {...props} data-fill={fill} data-priority={priority} />
     },
 }));

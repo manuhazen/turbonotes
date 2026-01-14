@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import NoteClient from "./client"
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
     return {
         title: "Edit Note",
     }

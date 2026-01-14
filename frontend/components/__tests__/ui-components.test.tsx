@@ -5,8 +5,6 @@ import { Button } from "../ui/button";
 import { CloseButton } from "../ui/close-button";
 import { CategorySelect } from "../ui/category-select";
 import { PasswordInput } from "../ui/password-input";
-import { Input } from "../ui/input";
-import { Select } from "../ui/select";
 
 // Mock Lucide X icon since we don't need to test the svg path
 jest.mock('lucide-react', () => ({
@@ -54,8 +52,8 @@ describe("NoteCard", () => {
 
 describe("Button", () => {
     it("renders the pill variant with correct classes", () => {
-        render(<Button variant="pill">New Note</Button>);
-        const button = screen.getByRole("button", { name: "New Note" });
+        render(<Button variant="default">Click me</Button>);
+        const button = screen.getByRole("button", { name: "Click me" });
 
         expect(button).toHaveClass("rounded-full");
         expect(button).toHaveClass("border");

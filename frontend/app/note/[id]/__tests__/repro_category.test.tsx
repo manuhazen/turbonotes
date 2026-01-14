@@ -24,12 +24,15 @@ jest.mock("@/hooks/use-notes", () => ({
     }),
 }));
 
-const { useNote } = require("@/hooks/use-notes");
+import { useNote } from "@/hooks/use-notes";
 
+/* eslint-disable @next/next/no-html-link-for-pages */
 jest.mock("next/link", () => {
-    return ({ children }: { children: React.ReactNode }) => {
+    const MockLink = ({ children }: { children: React.ReactNode }) => {
         return <a href="/">{children}</a>;
     };
+    MockLink.displayName = "MockLink";
+    return MockLink;
 });
 
 describe("NotePage Category Sync Bug", () => {
@@ -52,7 +55,7 @@ describe("NotePage Category Sync Bug", () => {
             category_color: "#FF0000",
             updated_at: new Date().toISOString(),
         };
-        useNote.mockReturnValue({ data: mockNote, isLoading: false });
+        (useNote as jest.Mock).mockReturnValue({ data: mockNote, isLoading: false });
         const params = Promise.resolve({ id: "123" });
 
         await act(async () => {
@@ -75,8 +78,8 @@ describe("NotePage Category Sync Bug", () => {
             category_color: "#FF0000",
             updated_at: new Date().toISOString(),
         };
-        // @ts-ignore force type mismatch
-        useNote.mockReturnValue({ data: mockNote, isLoading: false });
+
+        (useNote as jest.Mock).mockReturnValue({ data: mockNote, isLoading: false });
         const params = Promise.resolve({ id: "123" });
 
         await act(async () => {

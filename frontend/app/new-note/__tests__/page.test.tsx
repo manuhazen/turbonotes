@@ -19,10 +19,13 @@ jest.mock("@/hooks/use-notes", () => ({
 }));
 
 // Mock Navigation (Link, etc) is handled by Next.js automatically or we might need simple mocks if complex
+/* eslint-disable @next/next/no-html-link-for-pages */
 jest.mock("next/link", () => {
-    return ({ children }: { children: React.ReactNode }) => {
+    const MockLink = ({ children }: { children: React.ReactNode }) => {
         return <a href="/">{children}</a>;
     };
+    MockLink.displayName = "MockLink";
+    return MockLink;
 });
 
 

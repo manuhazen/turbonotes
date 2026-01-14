@@ -20,12 +20,15 @@ jest.mock("@/hooks/use-notes", () => ({
     }),
 }));
 
-const { useNote } = require("@/hooks/use-notes");
+import { useNote } from "@/hooks/use-notes";
 
+/* eslint-disable @next/next/no-html-link-for-pages */
 jest.mock("next/link", () => {
-    return ({ children }: { children: React.ReactNode }) => {
+    const MockLink = ({ children }: { children: React.ReactNode }) => {
         return <a href="/">{children}</a>;
     };
+    MockLink.displayName = "MockLink";
+    return MockLink;
 });
 
 describe("NotePage", () => {
@@ -41,7 +44,7 @@ describe("NotePage", () => {
 
     beforeEach(() => {
         mockUpdate.mockClear();
-        useNote.mockReset();
+        (useNote as jest.Mock).mockReset();
     });
 
     // Helper to render with Suspense
@@ -54,7 +57,7 @@ describe("NotePage", () => {
     };
 
     it("renders loading state", async () => {
-        useNote.mockReturnValue({ data: null, isLoading: true });
+        (useNote as jest.Mock).mockReturnValue({ data: null, isLoading: true });
         const params = Promise.resolve({ id: "123" });
 
         await act(async () => {
@@ -70,7 +73,7 @@ describe("NotePage", () => {
     });
 
     it("renders error/not found state", async () => {
-        useNote.mockReturnValue({ data: null, isLoading: false, error: true });
+        (useNote as jest.Mock).mockReturnValue({ data: null, isLoading: false, error: true });
         const params = Promise.resolve({ id: "123" });
 
         await act(async () => {
@@ -80,7 +83,7 @@ describe("NotePage", () => {
     });
 
     it("renders note data and allows editing", async () => {
-        useNote.mockReturnValue({ data: mockNote, isLoading: false });
+        (useNote as jest.Mock).mockReturnValue({ data: mockNote, isLoading: false });
         const params = Promise.resolve({ id: "123" });
 
         await act(async () => {

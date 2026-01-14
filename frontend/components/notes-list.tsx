@@ -1,10 +1,11 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
+import Image from "next/image"
 import { useNotes } from "@/hooks/use-notes"
 import { NoteCard } from "@/components/ui/note-card"
 import Link from "next/link"
-import { cn, humanizeDate } from "@/lib/utils"
+import { humanizeDate } from "@/lib/utils"
 
 export function NotesList() {
     const searchParams = useSearchParams()
@@ -28,9 +29,11 @@ export function NotesList() {
     if (!notes?.length) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-                <img
+                <Image
                     src="/bobba.png"
                     alt="Waiting for notes"
+                    width={288}
+                    height={288}
                     className="w-72 h-auto object-contain"
                 />
                 <p className="text-[#8D7B68] text-xl md:text-2xl font-medium tracking-tight">
@@ -43,7 +46,7 @@ export function NotesList() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {notes.map((note) => (
-                <Link key={note.id} href={`/note/${note.id}`} className="h-full block">
+                <Link key={note.id} href={`/ note / ${note.id} `} className="h-full block">
                     <NoteCard
                         title={note.title}
                         date={humanizeDate(note.updated_at)}

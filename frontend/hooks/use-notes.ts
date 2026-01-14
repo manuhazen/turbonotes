@@ -29,8 +29,8 @@ export const useNote = (id: string) => {
 };
 
 export const useCreateNote = () => {
+
     const queryClient = useQueryClient();
-    const router = useRouter();
 
     return useMutation({
         mutationFn: (data: CreateNoteData) => createNote(data),

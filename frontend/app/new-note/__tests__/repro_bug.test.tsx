@@ -18,10 +18,13 @@ jest.mock("@/hooks/use-notes", () => ({
     }),
 }));
 
+/* eslint-disable @next/next/no-html-link-for-pages */
 jest.mock("next/link", () => {
-    return ({ children }: { children: React.ReactNode }) => {
+    const MockLink = ({ children }: { children: React.ReactNode }) => {
         return <a href="/">{children}</a>;
     };
+    MockLink.displayName = "MockLink";
+    return MockLink;
 });
 
 describe("NewNotePage Selection Bug", () => {

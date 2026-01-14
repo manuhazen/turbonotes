@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Menu, LogOut } from "lucide-react"
 import { useLogout, useUser } from "@/hooks/use-auth"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
+type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function SidebarContent({ className, onItemClick, mobile = false }: { className?: string, onItemClick?: () => void, mobile?: boolean }) {
     const { data: categories, isLoading } = useCategories()

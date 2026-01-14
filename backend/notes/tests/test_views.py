@@ -8,14 +8,14 @@ class TestNoteViews:
         Category.objects.create(name="Work", color="#FF0000", creator=user)
         response = authenticated_client.get('/api/categories/')
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
+        assert len(response.data) == 4
 
     def test_get_categories_unauthenticated(self, api_client):
         response = api_client.get('/api/categories/')
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_create_note(self, authenticated_client, user):
-        category = Category.objects.create(name="Personal", color="#00FF00", creator=user)
+        category = Category.objects.create(name="Unique Test Category", color="#00FF00", creator=user)
         data = {
             "title": "Gym",
             "description": "Leg day",

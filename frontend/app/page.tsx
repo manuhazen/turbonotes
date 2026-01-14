@@ -7,6 +7,7 @@ import { NotesList } from "@/components/notes-list"
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
+  console.log('process.env.', process.env)
   return (
     <div className="flex h-screen bg-[#FDFBF7]">
       <Suspense fallback={<div className="w-[240px] border-r border-[#EDDDD4] h-screen bg-[#FDFBF7]" />}>

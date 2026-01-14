@@ -51,8 +51,8 @@ export function SidebarContent({ className, onItemClick }: { className?: string,
                         </button>
 
                         {!isLoading && categories?.length === 0 && (
-                            <div className="px-2 text-sm text-muted-foreground">
-                                No categories.
+                            <div className="px-2 text-sm text-[#8D7B68]/60 italic">
+                                No flavors mixed yet.
                             </div>
                         )}
 

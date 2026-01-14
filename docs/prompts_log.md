@@ -63,3 +63,22 @@
 - **Login**: Added `Alert` component to `sign-in/client.tsx` to display API errors.
 - **Mobile**: Refactored `components/sidebar.tsx` to use `Drawer` (shadcn) on mobile (md:hidden) and fixed sidebar on desktop.
 - **Shortcuts**: Added `CTRL/CMD + Enter` handler in `note/[id]/client.tsx` and a visual hint.
+
+## 13. Empty State Implementation
+**Date**: 2026-01-14
+**Action**: Implemented Bobba empty state.
+**Prompt/Context**:
+> For the empty state of the app, we need the bobba and a cool copy centered:
+> <bobba image/> <I’m just here waiting for your charming notes.../>
+
+**Execution**:
+- Updated `components/notes-list.tsx` to show `/bobba.png` and the requested text when no notes are found.
+
+## 14. Categories Empty State Copy
+**Date**: 2026-01-14
+**Action**: Updated categories empty state copy.
+**Prompt/Context**:
+> And let's improve the categories empty state of copy with a more charm copy as the empty state.
+
+**Execution**:
+- Changed "No categories." to "No flavors mixed yet." in `components/sidebar.tsx`.

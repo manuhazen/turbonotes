@@ -26,8 +26,15 @@ export function NotesList() {
 
     if (!notes?.length) {
         return (
-            <div className="text-center text-muted-foreground py-12">
-                No notes found. Create one to get started!
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
+                <img
+                    src="/bobba.png"
+                    alt="Waiting for notes"
+                    className="w-72 h-auto object-contain"
+                />
+                <p className="text-[#8D7B68] text-xl md:text-2xl font-medium tracking-tight">
+                    I’m just here waiting for your charming notes...
+                </p>
             </div>
         )
     }

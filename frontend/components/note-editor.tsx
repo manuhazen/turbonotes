@@ -121,15 +121,15 @@ export function NoteEditor({
     }
 
     return (
-        <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 flex flex-col transition-colors duration-300">
+        <div className="h-screen overflow-hidden bg-[#FDFBF7] p-4 md:p-8 flex flex-col transition-colors duration-300">
             <Form {...form}>
                 <form
-                    className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full"
+                    className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full overflow-hidden"
                     onKeyDown={handleKeyDown}
                     onSubmit={(e) => e.preventDefault()} // Prevent default submit
                 >
                     {/* Header Controls */}
-                    <div className="flex justify-between items-center mb-6 px-1">
+                    <div className="flex justify-between items-center mb-6 px-1 shrink-0">
                         <div className="flex items-center gap-2">
                             <FormField
                                 control={form.control}
@@ -191,7 +191,7 @@ export function NoteEditor({
 
                     {/* Note Card */}
                     <div
-                        className="flex-1 rounded-[32px] p-8 md:p-12 relative flex flex-col shadow-sm border border-black/5 transition-colors duration-300"
+                        className="flex-1 rounded-[32px] p-8 md:p-12 relative flex flex-col shadow-sm border border-black/5 transition-colors duration-300 overflow-hidden"
                         style={{ backgroundColor: bgColor }}
                     >
                         {/* Last Edited or Saving Indicator */}
@@ -204,7 +204,7 @@ export function NoteEditor({
                             control={form.control}
                             name="title"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="shrink-0">
                                     <FormControl>
                                         <Input
                                             placeholder="Note Title"
@@ -222,11 +222,11 @@ export function NoteEditor({
                             control={form.control}
                             name="description"
                             render={({ field }) => (
-                                <FormItem className="flex-1 mt-8">
-                                    <FormControl>
+                                <FormItem className="flex-1 mt-8 flex flex-col overflow-hidden">
+                                    <FormControl className="flex-1 flex flex-col h-full">
                                         <Textarea
                                             placeholder="Pour your heart out..." // Consistent placeholder
-                                            className="shadow-none w-full h-full min-h-[400px] text-lg bg-transparent border-none px-0 resize-none placeholder:text-black/20 focus-visible:ring-0 leading-relaxed font-sans text-black/80"
+                                            className="shadow-none w-full h-full text-lg bg-transparent border-none px-0 resize-none placeholder:text-black/20 focus-visible:ring-0 leading-relaxed font-sans text-black/80 overflow-y-auto"
                                             {...field}
                                         />
                                     </FormControl>

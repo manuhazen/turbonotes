@@ -12,18 +12,8 @@ export default function NewNoteClient() {
 
     const categories = rawCategories || []
 
-    // Auto-select first category logic needs to be passed down or handled?
-    // NoteEditor doesn't enforce default category unless passed in initialData.
-    // We can compute default category here.
-
-    // Actually, NoteEditor resets form when initialData changes.
-    // We can pass a computed initialData object once categories is loaded.
     const sortedCategories = categories.slice().sort((a, b) => a.name.localeCompare(b.name))
     const defaultCategoryId = sortedCategories.length > 0 ? String(sortedCategories[0].id) : ""
-
-    // Ideally we want to pass this as initialData.
-    // But categories might load later.
-    // If we pass initialData with category set, NoteEditor will use it.
 
     const handleSave = (values: NoteFormData) => {
         createNote.mutate({
@@ -32,7 +22,6 @@ export default function NewNoteClient() {
             category: values.category || null,
         }, {
             onSuccess: (data) => {
-                // Redirect to edit mode
                 router.replace(`/note/${data.id}`)
             }
         })

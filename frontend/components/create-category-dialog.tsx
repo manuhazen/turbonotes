@@ -36,7 +36,7 @@ const formSchema = z.object({
 export function CreateCategoryDialog() {
     const [open, setOpen] = useState(false)
     const createCategory = useCreateCategory()
-    const { data: categories } = useCategories() // Get existing categories
+    const { data: categories } = useCategories()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

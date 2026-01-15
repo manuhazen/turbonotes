@@ -34,7 +34,6 @@ export function SidebarContent({ className, onItemClick, mobile = false }: { cla
         if (onItemClick) onItemClick()
     }
 
-    // helper for initials
     const initials = user
         ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() || 'ME'
         : '...'
@@ -42,7 +41,6 @@ export function SidebarContent({ className, onItemClick, mobile = false }: { cla
     return (
         <div className={cn("pb-12 w-full flex flex-col h-full bg-[#FDFBF7]", className)}>
             <div className="space-y-4 py-8 flex-1">
-                {/* ... existing categories list code ... */}
                 <div className="px-6 py-2">
                     <div className="space-y-1">
                         {isLoading && <div className="px-2 text-sm text-muted-foreground">Loading...</div>}

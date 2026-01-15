@@ -32,7 +32,6 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-// Define Schema centrally (or import if moved to a shared schema file)
 const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().optional(),
@@ -75,14 +74,11 @@ export function NoteEditor({
     const values = useWatch({ control: form.control }) as NoteFormData
     const selectedCategoryId = values.category
 
-    // Sort categories
     const sortedCategories = categories?.slice().sort((a, b) => a.name.localeCompare(b.name)) || []
 
-    // Background Color
     const currentCategory = categories?.find(c => String(c.id) === String(selectedCategoryId))
     const bgColor = currentCategory?.color || "#FDFBF7"
 
-    // Debounce Save
     const debouncedSave = useDebouncedCallback((values: NoteFormData) => {
         if (!values.title) return
         onSave(values)
@@ -94,12 +90,10 @@ export function NoteEditor({
         }
     }, [values, debouncedSave, form.formState.isDirty])
 
-    // Handle Cmd+Enter
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
             e.preventDefault()
             if (values.title) {
-                // Immediate save
                 debouncedSave.flush()
             }
         }
@@ -111,7 +105,7 @@ export function NoteEditor({
                 <form
                     className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full overflow-hidden"
                     onKeyDown={handleKeyDown}
-                    onSubmit={(e) => e.preventDefault()} // Prevent default submit
+                    onSubmit={(e) => e.preventDefault()}
                 >
                     {/* Header Controls */}
                     <div className="flex justify-between items-center mb-6 px-1 shrink-0">
@@ -184,7 +178,6 @@ export function NoteEditor({
                             {isSaving ? 'Saving...' : (lastEditedAt ? `Last Edited: ${new Date(lastEditedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : '')}
                         </div>
 
-                        {/* Title */}
                         <FormField
                             control={form.control}
                             name="title"
@@ -202,7 +195,6 @@ export function NoteEditor({
                             )}
                         />
 
-                        {/* Description */}
                         <FormField
                             control={form.control}
                             name="description"

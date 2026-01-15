@@ -9,7 +9,7 @@ export const useLogin = () => {
     return useMutation({
         mutationFn: (credentials: LoginCredentials) => loginUser(credentials),
         onSuccess: (data) => {
-            Cookies.set('token', data.auth_token, { expires: 7 }); // Expires in 7 days
+            Cookies.set('token', data.auth_token, { expires: 7 });
             router.push('/');
         },
     });
@@ -20,9 +20,6 @@ export const useRegister = () => {
 
     return useMutation({
         mutationFn: (credentials: RegisterCredentials) => registerUser(credentials),
-        onSuccess: () => {
-            // router.push('/sign-in');
-        },
     });
 };
 

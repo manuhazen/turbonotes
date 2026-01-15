@@ -34,8 +34,9 @@ export const useCreateNote = () => {
 
     return useMutation({
         mutationFn: (data: CreateNoteData) => createNote(data),
-        onSuccess: () => {
+        onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] });
+            queryClient.setQueryData(['note', data.id], data);
             toast.success('Note created successfully');
         },
         onError: () => {

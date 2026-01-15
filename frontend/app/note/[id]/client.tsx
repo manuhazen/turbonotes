@@ -45,7 +45,6 @@ export default function NoteClient({ id }: { id: string }) {
         )
     }
 
-    // Prepare initial data
     const initialData: NoteFormData = {
         title: note.title,
         description: note.description,

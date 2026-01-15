@@ -73,8 +73,12 @@ export default function SignInClient() {
                             <FormItem>
                                 <FormControl>
                                     <Input
+                                        type="email"
                                         placeholder="Email address"
                                         className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
+                                        autoCapitalize="none"
+                                        autoComplete="email"
+                                        autoCorrect="off"
                                         {...field}
                                     />
                                 </FormControl>

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import Link from "next/link"
 import NextImage from "next/image"
+import { useMemo } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -42,7 +43,7 @@ const formSchema = z.object({
 interface ApiError {
     response?: {
         data?: {
-            email?: string[]
+            [key: string]: string[] | undefined
         }
     }
 }
@@ -103,6 +104,18 @@ export default function SignUpClient() {
         )
     }
 
+    const errorMessages = useMemo(() => {
+        if (!register.error) return [];
+        const apiError = register.error as unknown as ApiError;
+        if (apiError?.response?.data) {
+            const messages = Object.values(apiError.response.data)
+                .flat()
+                .filter((msg): msg is string => typeof msg === "string");
+            if (messages.length > 0) return messages;
+        }
+        return [register.error instanceof Error ? register.error.message : "Registration failed"];
+    }, [register.error]);
+
     return (
         <div className="w-full max-w-[400px]">
             <AuthHeader
@@ -120,8 +133,12 @@ export default function SignUpClient() {
                             <FormItem>
                                 <FormControl>
                                     <Input
+                                        type="email"
                                         placeholder="Email address"
                                         className="bg-[#F9F4E8] border-[#D7CCC8] h-12"
+                                        autoCapitalize="none"
+                                        autoComplete="email"
+                                        autoCorrect="off"
                                         {...field}
                                     />
                                 </FormControl>
@@ -129,14 +146,20 @@ export default function SignUpClient() {
                             </FormItem>
                         )}
                     />
-                    {register.isError && (
+                    {register.isError && errorMessages.length > 0 && (
                         <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>
-                                {(register.error as unknown as ApiError)?.response?.data?.email
-                                    ? "This email address is already in use. Maybe you want to login instead?"
-                                    : (register.error instanceof Error ? register.error.message : "Registration failed")}
+                            <AlertDescription className="capitalize">
+                                {errorMessages.length === 1 ? (
+                                    <span>{errorMessages[0]}</span>
+                                ) : (
+                                    <ul className="list-disc list-inside space-y-1">
+                                        {errorMessages.map((msg, idx) => (
+                                            <li key={idx}>{msg}</li>
+                                        ))}
+                                    </ul>
+                                )}
                             </AlertDescription>
                         </Alert>
                     )}

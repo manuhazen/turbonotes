@@ -70,22 +70,7 @@ export function NoteEditor({
         },
     })
 
-    // Reset form if initialData changes (e.g. data loaded)
-    useEffect(() => {
-        if (initialData) {
-            // Only reset if we are switching notes or loading for first time
-            // Strategy: Check if form is dirty? 
-            // If explicit initialData passed, we usually want to sync to it unless user is typing.
-            // But usually this component mounts with data ready or loading.
 
-            // For now, simpler reset logic:
-            form.reset({
-                title: initialData.title || "",
-                description: initialData.description || "",
-                category: initialData.category || ""
-            })
-        }
-    }, [initialData, form])
 
     const values = useWatch({ control: form.control }) as NoteFormData
     const selectedCategoryId = values.category

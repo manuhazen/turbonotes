@@ -54,6 +54,7 @@ export default function NoteClient({ id }: { id: string }) {
 
     return (
         <NoteEditor
+            key={id}
             initialData={initialData}
             categories={categories}
             onSave={handleSave}

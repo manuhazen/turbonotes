@@ -40,6 +40,7 @@ export default function NewNoteClient() {
 
     return (
         <NoteEditor
+            key={defaultCategoryId}
             initialData={{ title: "", description: "", category: defaultCategoryId }}
             categories={categories}
             onSave={handleSave}

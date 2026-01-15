@@ -124,6 +124,16 @@ This project was built using a **"Vibe Coding"** methodology—a modern, iterati
 
 The development environment features hot-reloading for both backend and frontend.
 
+### Environment Setup
+
+The project requires an environment file to be set up. You can copy the example file:
+
+```bash
+cp .env.example .env
+```
+
+### Development Setup
+
 ```bash
 # 1. Clone the repository
 git clone <repository_url>
